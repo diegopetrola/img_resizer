@@ -6,7 +6,7 @@ A script in python to resize all images in a folder.
 `img_resizer` requires `python` and `pillow`.
 Python should be installed on most operating systems by default and instructions to installing pillow can be seen [here](https://pillow.readthedocs.io/en/stable/installation.html).
 
-### Example Usage
+## Example Usage
 
 To resize all images in the folder `C:\TestFolder\` to *70%* or their width type:
 
