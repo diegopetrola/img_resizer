@@ -9,6 +9,7 @@ def calculate_new_size(size: tuple, factor:int, cap:int = float('inf')):
     return new_size
 
 # Piece of code from Blender
+# These code colors are used in the shell to make colored text
 class bcolors:
     HEADER = '\033[95m'
     OKBLUE = '\033[94m'

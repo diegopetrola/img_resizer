@@ -2,7 +2,7 @@ import os, glob, pathlib, argparse, json
 from PIL import Image
 from utils import utils
 
-IMG_TYPES = ('*.jpg', '*.png', '*.tga', '*.tif', '*.dds')
+IMG_TYPES = ('*.jpg', '*.png', '*.tga', '*.tif') #'*.dds')
 
 # configs will be stored here
 CONF_FILE = 'conf.json'
@@ -40,7 +40,7 @@ parser.add_argument('-d', '--dir', type=pathlib.Path,
 parser.add_argument('-R', '--recursive', action='store_true',
                     help= f'Also resizes images in subfolders of --dir')
 
-parser.add_argument('-c', '--cap', type=int,
+parser.add_argument('-c', '--cap', type=int, default=float('inf'),
                     help= f'If, after resized, the image is still below --cap value, \
                         it will capped to --cap.')
 
@@ -49,13 +49,12 @@ args.output_dir = args.output_dir or conf["output_dir"]
 args.dir = os.path.abspath(args.dir)
 
 if args.dir:
-    if args.recursive:
-        path = os.path.join (args.dir, '**')
-        print(path)
-    else:
-        path = args.dir
-    print(f"path: {path}")
     for extension in IMG_TYPES:
+        if args.recursive:
+            path = os.path.join (args.dir, '**')
+            print(path)
+        else:
+            path = args.dir
         path = os.path.join (path, extension)
         globpath = glob.glob( path )
         print(globpath)
@@ -63,7 +62,7 @@ if args.dir:
             with Image.open(file) as img:
                 path1, filename = os.path.split(file)
                 size = img.size
-                size = utils.calculate_new_size(size, args.width)
+                size = utils.calculate_new_size(size, args.width, args.cap)
                 new_img = img.resize(size)
                 path = os.path.join(args.dir, args.output_dir)
                 if os.path.isdir(path):
@@ -72,7 +71,7 @@ if args.dir:
                     os.mkdir(path)
                     path = os.path.join(path, filename)
 
-                # new_img.save(path)
+                new_img.save(path)
                 print(f"{utils.bcolors.OKGREEN}Saved file{utils.bcolors.ENDC}: {path}")
 
 if args.output_dir and args.output_dir != conf['output_dir']:
