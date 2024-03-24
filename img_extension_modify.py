@@ -41,21 +41,36 @@ parser.add_argument(
 parser.add_argument(
     "-R",
     "--recursive",
-    action="store_false",
+    action="store_true",
     help=f"Also resizes images in subfolders of --dir",
 )
 
+parser.add_argument(
+    "-D",
+    "--delete",
+    action="store_true",
+    help=f"Delete the original files (the original files will be lost!)",
+)
+
+
 args = parser.parse_args()
 args.output_dir = args.output_dir or args.dir
+print(args.delete, args.recursive)
+
+print(args.input)
 
 if args.dir:
     for extension in args.input:
+        p = f"**/*.{extension}" if args.recursive else f"*.{extension}"
+        print(p)
         x = pathlib.Path.glob(
             args.dir,
-            pattern=f"**\*.{extension}" if args.recursive else f"*.{extension}",
+            pattern=p,
         )
         for i in x:
+            print(i)
             img = Image.open(i)
             name = i.name.replace(extension, args.output)
             img.save(i.parent / name)
-            print(i.parent)
+            if args.delete:
+                os.remove(i)
