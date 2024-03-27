@@ -55,9 +55,6 @@ parser.add_argument(
 
 args = parser.parse_args()
 args.output_dir = args.output_dir or args.dir
-print(args.delete, args.recursive)
-
-print(args.input)
 
 if args.dir:
     for extension in args.input:
@@ -68,9 +65,13 @@ if args.dir:
             pattern=p,
         )
         for i in x:
-            print(i)
-            img = Image.open(i)
-            name = i.name.replace(extension, args.output)
-            img.save(i.parent / name)
-            if args.delete:
-                os.remove(i)
+            try:
+                print(i)
+                img = Image.open(i)
+                name = i.name.replace(extension, args.output)
+                img.save(i.parent / name)
+                if args.delete:
+                    os.remove(i)
+            # sometimes PIL throws an error when it can't read a file
+            except NotImplementedError:
+                continue
