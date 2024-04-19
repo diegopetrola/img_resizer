@@ -29,7 +29,7 @@ parser.add_argument(
     "--out",
     type=str,
     default="WEBP",
-    help=f"Output file type, default is WEPB",
+    help=f"Output file type, default is WEPB.",
 )
 
 parser.add_argument(
@@ -62,6 +62,6 @@ with contextlib.ExitStack() as stack:
         format=args.out,
         append_images=imgs,
         save_all=True,
-        duration=len(img_paths) * 1000 // (3 * args.duration),
+        duration=args.duration // len(img_paths),
         loop=0,  # loop forever
     )
